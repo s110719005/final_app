@@ -81,6 +81,7 @@ class HomeScreen extends Component {
                     horizontal={true} 
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item}) => (
+                        
                         <View style={styles.home_container}>
                         <SafeAreaView style={{ backgroundColor: '#7FB134' }}/>
                         <View style={styles.header}>
