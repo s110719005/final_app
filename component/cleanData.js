@@ -1,10 +1,11 @@
 export default cleanData = [
     {
+        id:1,
         genre:"衛浴",
-        pic:"123",
+        pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_bathroom2.png?raw=true",
         todos:[
             {
-                key:1,
+                key:"1",
                 title:"牙刷1",
                 note:"爸爸",
                 day:57,
@@ -14,7 +15,7 @@ export default cleanData = [
                 danger:false
             },
             {
-                key:2,
+                key:"2",
                 title:"牙刷11",
                 note:"爸爸",
                 day:"57",
@@ -24,7 +25,7 @@ export default cleanData = [
                 danger:false
             },
             {
-                key:3,
+                key:"3",
                 title:"牙刷111",
                 note:"爸爸",
                 day:"57",
@@ -33,8 +34,26 @@ export default cleanData = [
                 danger:false
             },
             {
-                key:4,
+                key:"4",
                 title:"牙刷1111",
+                note:"爸爸",
+                day:"57",
+                safe:false,
+                normal:true,
+                danger:false
+            },
+            {
+                key:"13",
+                title:"牙刷11111",
+                note:"爸爸",
+                day:"57",
+                safe:false,
+                normal:true,
+                danger:false
+            },
+            {
+                key:"14",
+                title:"牙刷111111",
                 note:"爸爸",
                 day:"57",
                 safe:false,
@@ -44,11 +63,12 @@ export default cleanData = [
         ]
     },
     {
+        id:2,
         genre:"廚房",
-        pic:"123",
+        pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_kitchen.png?raw=true",
         todos:[
             {
-                key:5,
+                key:"5",
                 title:"牙刷2",
                 note:"爸爸",
                 day:"57",
@@ -57,7 +77,7 @@ export default cleanData = [
                 danger:false
             },
             {
-                key:6,
+                key:"6",
                 title:"牙刷22",
                 note:"爸爸",
                 day:"57",
@@ -68,18 +88,19 @@ export default cleanData = [
         ]
     },
     {
+        id:3,
         genre:"起居",
-        pic:"123",
+        pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_bedroom.png?raw=true",
         todos:[
             {
-                key:7,
+                key:"7",
                 title:"牙刷3",
                 note:"爸爸",
                 day:"57",
                 state:1
             },
             {
-                key:8,
+                key:"8",
                 title:"牙刷33",
                 note:"爸爸",
                 day:"57",
@@ -88,39 +109,20 @@ export default cleanData = [
         ]
     },
     {
+        id:4,
         genre:"其他",
-        pic:"123",
+        pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_household.png?raw=true",
         todos:[
             {
-                key:9,
+                key:"9",
                 title:"牙刷4",
                 note:"爸爸",
                 day:"57",
                 state:1
             },
             {
-                key:10,
+                key:"10",
                 title:"牙刷44",
-                note:"爸爸",
-                day:"57",
-                state:3
-            }
-        ]
-    },
-    {
-        genre:"全部",
-        pic:"123",
-        todos:[
-            {
-                key:11,
-                title:"牙刷5",
-                note:"爸爸",
-                day:"57",
-                state:1
-            },
-            {
-                key:12,
-                title:"牙刷55",
                 note:"爸爸",
                 day:"57",
                 state:3

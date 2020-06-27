@@ -1,117 +1,162 @@
-import React,{Component} from 'react';
-import { StyleSheet, Text, View, Dimensions, SafeAreaView,Image, ScrollView,FlatList} from 'react-native';
+import React,{Component, useEffect,useState} from 'react';
+import { StyleSheet, Text, View, Dimensions, SafeAreaView,Image, ScrollView,FlatList,Modal, TouchableOpacity} from 'react-native';
 
 
 
 import cleanData from '../component/cleanData'
 import HomeData from './HomeDataScreen'
+import AddListModal from '../component/addListModal'
+import FloatingButton from '../component/floatingButton'
+import Fire from '../component/fire'
 
 import Pie from 'react-native-pie'
+import VitoryPie, { VictoryPie } from "victory-native"
 
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
+let count = 25;
 class HomeScreen extends Component {
     
-    render (){
+
+    state = {
+        addTodoVisible : false,
+        lists: cleanData,
+        user:{}
         
+    };
+
+    componentDidMount(){
+        firebase = new Fire((error,user) => {
+            if(error){
+                return alert("哇 好像哪裡出錯了...")
+            }
+
+            this.setState({user});
+        });
+    }
+
+    toggleAddTodoModal(){
+        this.setState({addTodoVisible: !this.state.addTodoVisible });
+    }
+
+    renderList =list =>{
+        return <HomeData list={list}/>
+    }
+
+    addList = list ={
+
+    };
+
+   
+    
+    
+
+    render (){
+
         let totalSafe = 0;
         let totalNormal = 0;
         let totalDanger = 0;
         let totalQuantity = 0;
-        let safeCount = 0;
         cleanData.forEach((item) => {
             totalSafe += item.todos.filter(todo => todo.safe).length;
             totalNormal += item.todos.filter(todo => todo.normal).length;
             totalDanger += item.todos.filter(todo => todo.danger).length;
             totalQuantity += item.todos.filter(todo => todo.title).length;
-            safeCount = item.todos.filter(todo => todo.safe).length;
             //totalQuantity += item.safe2;
             //totalPrice += item.quantity * item.price;
         })
+        
+        const defaultData =[
+            {x:totalSafe/totalQuantity,y:100},
+            {x:"normal",y:0},
+            {x:"danger",y:0}
+
+        ];
+        const sampleData =[
+            {x:[totalSafe],y:totalSafe/totalQuantity},
+            {x:totalNormal,y:totalNormal/totalQuantity},
+            {x:totalDanger,y:totalDanger/totalQuantity}
+
+        ];
+        const dataColor=[
+            "#9FD47C","#FFE047","#F16464"
+        ];
+        
+        
+        
         return(
-            <ScrollView 
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled={true}
-                style={{backgroundColor:"#FFCB77"}}
-            >
-            <View style={{width:screenWidth,height:screenHeight}}>
-                <SafeAreaView style={{ backgroundColor: '#7FB134' }}/>
-                <View>
-                    <Text>整潔：{totalSafe} </Text>
-                    <Text>普通：{totalNormal} </Text>
-                    <Text>髒亂：{totalDanger} </Text>
-                    <Text>全部：{totalQuantity} </Text>
-                    {/* <Pie
-                        radius={80}
-                        innerRadius={60}
-                        sections={[
-                            {
-                            percentage: 10,
-                            color: '#C70039',
-                            },
-                            {
-                            percentage: 20,
-                            color: '#44CD40',
-                            },
-                            {
-                            percentage: 30,
-                            color: '#404FCD',
-                            },
-                            {
-                            percentage: 40,
-                            color: '#EBD22F',
-                            },
-                        ]}
-                        dividerSize={6}
-                        strokeCap={'butt'}
-                    /> */}
-                </View>
-                <View style={styles.home_text_bar}>
-                 <Text style={styles.home_text}>安全已佔四成,{"\n"}相信還可以更多! :)</Text>
-                </View>
-            </View>
-
-
-            <View style={{width:screenWidth,height:screenHeight,backgroundColor:"#FFCB77",alignItems: 'center',justifyContent:"center",flex:1}}>
+            
+            <View style={{width:screenWidth,height:screenHeight,backgroundColor:"#227C9D",alignItems: 'center',justifyContent:"center",flex:1}}>
+                    <Modal 
+                    animationType="slide" 
+                    transparent={true}
+                    //visible={true}
+                    visible={this.state.addTodoVisible} 
+                    onRequestClose={()=>this.state.toggleAddTodoModal()}
+                    >
+                        <AddListModal list={cleanData} closeModal={()=> this.toggleAddTodoModal()} addList={this.addList}/>
+                    </Modal>
+                    <View style={{height:screenHeight*0.86}}>
                     <FlatList 
-                    data={cleanData} 
+                    ListHeaderComponent={
+                        <>
+                            <View style={{width:screenWidth,height:screenHeight*0.86,backgroundColor:"#FFCB77"}}>
+                            <SafeAreaView style={{ backgroundColor: '#FFCB77' }}/>
+                            <View style={styles.chart_container}>
+                                
+                                <VictoryPie 
+                                    
+                                    width={screenWidth*0.7}
+                                    animate={{ easing: 'exp' }}
+                                    data={sampleData}
+                                    colorScale={dataColor}
+                                    innerRadius={screenWidth*0.34}
+                                    labelRadius={screenWidth*0.26}
+                                    height={screenWidth*0.75}
+                                    padAngle={0}
+                                    style={{
+                                        data: {
+                                          fillOpacity: 0.9, stroke: "white", strokeWidth: 4
+                                        },
+                                        labels: {
+                                          fontSize:20
+                                        }
+                                      }}
+                                />
+                            </View>
+                                <View style={styles.home_text_bar}>
+                                <Text style={styles.home_text}>安全已佔四成,{"\n"}相信還可以更多! :)</Text>
+                                </View>
+                                <Text>      User:{this.state.user.uid} </Text>
+                            </View>
+                            
+                            
+                        </>
+                    }
+                    data={this.state.lists} 
                     keyExtractor={item => item.genre} 
                     pagingEnabled={true}
                     horizontal={true} 
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({item}) => (
-                        
-                        <View style={styles.home_container}>
-                        <SafeAreaView style={{ backgroundColor: '#7FB134' }}/>
-                        <View style={styles.header}>
-                            <View>
-                                <Image source={require('../assets/img/img_bathroom.png')} style={styles.header_pic}/>
-                            </View>
-                            <View style={styles.header_title}>
-                                <Image source={require('../assets/btn/btn_toleft.png')} style={styles.header_btn}/>
-                                <Text style={styles.header_text}>{item.genre}</Text>
-                                
-                                <Image source={require('../assets/btn/btn_toright.png')} style={styles.header_btn}/>
-                            </View>
-                            <Text>整潔：{safeCount} </Text>
-                            {/* <FlatList 
-                            data={item.todos} 
-                            keyExtractor={item => item.key} 
-                            renderItem={({item}) => <Text>{item.title}</Text> }
-                            /> */}
-                            <Text>整潔：{safeCount} </Text>
-                        </View>
-                </View>
-
-
-                    ) }
+                    renderItem={({item}) => this.renderList(item) }
                     />
+                    </View>
+                    
+                    <View style={styles.tab}>
+                        
+                        
+                            <FloatingButton/>
+                            {/* <Image source={require('../assets/btn/btn_menu.png')} 
+                            style={[styles.tab_btn,{marginRight:screenWidth*0.7}]}/> */}
+                       <View style={{width:screenWidth*0.7}}></View>
+                        <TouchableOpacity onPress={()=> this.toggleAddTodoModal()}>
+                            <Image source={require('../assets/btn/btn_add.png')} 
+                            style={styles.tab_btn}/>
+                        </TouchableOpacity>
+                    </View>
+                    <SafeAreaView/> 
             </View>
-                
-
             
-             </ScrollView>
             
         );
     }
@@ -126,6 +171,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFCB77',
         width: screenWidth,
         height: "100%"
+    },
+    chart_container:{
+        alignItems:"center",
+        marginVertical:30,
     },
     home_text_bar:{
         backgroundColor:"#B6D3DD",
@@ -142,34 +191,16 @@ const styles = StyleSheet.create({
         lineHeight:30,
         letterSpacing:1.5
     },
-    home_container: {
-        flex: 1,
-        backgroundColor: '#FFCB77',
-        width: screenWidth,
-        height: "100%"
-    },
-    header:{
-        paddingTop:"7%",
-        alignItems: 'center',
-    },
-    header_pic:{
-        width:83,
-        height:58
-    },
-    header_title:{
+    tab:{
         display:"flex",
         flexDirection:"row",
-        alignItems:"center",
-        paddingTop:"3%",
+        height:screenHeight*0.12,
+        alignItems:"flex-end",
+        paddingBottom:screenHeight*0.04
+
     },
-    header_btn:{
-        width:13,
-        height:15
-    },
-    header_text:{
-        fontSize:30,
-        fontWeight:"900",
-        paddingLeft:"5%",
-        paddingRight:"5%"
+    tab_btn:{
+        width:30,
+        height:30
     }
 });

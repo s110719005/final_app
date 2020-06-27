@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import React ,{useState,useEffect} from 'react';
 import { StyleSheet, Text, View, TextInput, SafeAreaView ,Dimensions, TouchableOpacity,AsyncStorage} from 'react-native';
 import HomeScreen from './screen/HomeScreen'
 
@@ -17,27 +17,36 @@ export default function App() {
 
   const load= async() =>{
     try{
-      let username = awiat
+      let username = await AsyncStorage.getItem("MyName")
+
+      if(username !== null){
+        setUserName(username);
+      }
     }catch(err){
       alert(err)
     }
   }
 
+  useEffect(()=> {
+    load()
+  },[])
+
   return (
     <View style={styles.container}>
-      {/* <HomeScreen></HomeScreen> */}
-      <SafeAreaView/>
-      <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
+      <HomeScreen></HomeScreen>
+      {/* <SafeAreaView/> */}
+      {/* <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
       <TextInput placeholder="請輸入使用者名稱"
         onChangeText = {text => setUserName(text)}
-        onPress = {() => save()}
+        
         style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]} />
       <TextInput placeholder="請輸入密碼"
         
         style={[styles.input,{borderTopWidth:1,borderTopRightRadius:0,borderTopStartRadius:0}]} />
-      <TouchableOpacity style={{justifyContent:"center",alignItems:"center"}}>
+      <TouchableOpacity onPress = {() => save()}
+      style={{justifyContent:"center",alignItems:"center"}}>
         <Text style={styles.login}>登入</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -47,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFCB77',
     alignItems: 'center',
-    paddingTop:screenHeight*0.2
+    //paddingTop:screenHeight*0.2
   },
   input:{
     borderWidth:2,
