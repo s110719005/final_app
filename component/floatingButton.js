@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,Image,StyleSheet,Animated,TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 
 export default class floatingButton extends Component {
-  
+    
     animation = new Animated.Value(0)
 
     toggleMenu=() => {
@@ -68,14 +68,19 @@ export default class floatingButton extends Component {
       }
     return (
       <View style={styles.tab_con}>
-          <TouchableOpacity>
+          <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Home')}
+          >
               <Animated.View style={[styles.button,styles.menu,pinStyle3]}>
                 <Image source={require('../assets/btn/btn_home.png')} 
                 style={[styles.tab_btn]}/>
               </Animated.View>
             
           </TouchableOpacity>
-          <TouchableOpacity>
+          
+          <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('History')}
+          >
               <Animated.View style={[styles.button,styles.menu,pinStyle2]}>
                 <Image source={require('../assets/btn/btn_user.png')} 
                 style={[styles.tab_btn]}/>

@@ -11,13 +11,15 @@ const firebaseConfig ={
     appId: "1:235000499477:web:6bbe48130682cf4afe6d1c"
 }
 
+
+
 class Fire{
     constructor(callback) {
         this.init(callback);
     }
     init (callback){
         if(!firebase.apps.length){
-            firebase.initializeApp(firebaseConfig)
+            firebase.initializeApp(firebaseConfig);
         }
         firebase.auth().onAuthStateChanged(user => {
             if(user){
@@ -34,26 +36,46 @@ class Fire{
         })
     }
 
+    // addList(list){
+    //     let ref = this.ref
+
+    //     ref.doc(list.id).add(list)
+    // }
+
+    // updateList(list) {
+    //     let ref = this.ref
+
+    //     ref.doc(list.id).update(list)
+    // }
+
     getLists(callback){
         let ref = firebase
         .firestore()
-        .collection('users')
-        .doc(this.userId)
-        .collection('lists');
+        .collection("users")
+        //.doc(this.userId)
+        .doc("- [ ] mLGPbthTHgUePbjQBv9loFqq5yn2")
+        .collection("lists");
 
         this.unsubscribe = ref.onSnapshot(snapshot => {
-            list = []
+            lists = [];
 
-            snapshot.forEach(doc=> {
-                list.push({id: doc.id, ...doc.data()})
-            })
+            snapshot.forEach(doc => {
+                lists.push({id: doc.id, ...doc.data() });
+            });
 
-            callback(lists)
-        })
+            callback(lists);
+        });
     }
     
+    
+
     get userId(){
-        return firebase.auth().currentUser.uid
+        return firebase.auth().currentUser.uid;
+    }
+    
+
+    detach(){
+        this.unsubscribe();
     }
 }
 

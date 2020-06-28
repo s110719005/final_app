@@ -3,10 +3,12 @@ import { View, Text, KeyboardAvoidingView ,StyleSheet, SafeAreaView,Dimensions, 
 import DatePicker from 'react-native-datepicker'
 import cleanData from '../component/cleanData'
 
+
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
 
 let count = 25;
+
 
 
 export default class addListModal extends Component {
@@ -39,6 +41,8 @@ export default class addListModal extends Component {
         
     }
 
+   
+
     addTodo = (dleft=day_left) =>{
         
         if(this.state.nowtodo!==null&&this.state.new_title!==null){
@@ -59,6 +63,7 @@ export default class addListModal extends Component {
                     this.state.normal=false,
                     this.state.danger=true
             }
+            
             this.state.nowtodo.push({
                 key:count,
                 title: this.state.new_title,
@@ -202,7 +207,7 @@ export default class addListModal extends Component {
                     {/* genre */}
                     <View style={styles.genre}>
                     <FlatList
-                        data={cleanData} 
+                        data={lists} 
                         keyExtractor={item => item.genre} 
                         horizontal={true} 
                         extraData={

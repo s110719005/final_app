@@ -12,25 +12,37 @@ import Fire from '../component/fire'
 import Pie from 'react-native-pie'
 import VitoryPie, { VictoryPie } from "victory-native"
 
+
+
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
 let count = 25;
 class HomeScreen extends Component {
     
+    
 
     state = {
         addTodoVisible : false,
-        lists: cleanData,
-        user:{}
+        //lists: cleanData,
+        lists: [],
+        user: {},
+        loading:true,
+        
         
     };
 
     componentDidMount(){
         firebase = new Fire((error,user) => {
             if(error){
-                return alert("哇 好像哪裡出錯了...")
+                return alert("哇 好像哪裡出錯了...");
             }
 
+            firebase.getLists(lists => {
+                this.setState({ lists, user }, () => {
+                    this.setState({ loading: false });
+                });
+            });
+            
             this.setState({user});
         });
     }
@@ -40,11 +52,11 @@ class HomeScreen extends Component {
     }
 
     renderList =list =>{
-        return <HomeData list={list}/>
+        return <HomeData list={list} updateList={this.updateList}/>
     }
 
-    addList = list ={
-
+    updateList = list =>{
+        firebase.updateList(list);
     };
 
    
@@ -57,7 +69,7 @@ class HomeScreen extends Component {
         let totalNormal = 0;
         let totalDanger = 0;
         let totalQuantity = 0;
-        cleanData.forEach((item) => {
+        this.state.lists.forEach((item) => {
             totalSafe += item.todos.filter(todo => todo.safe).length;
             totalNormal += item.todos.filter(todo => todo.normal).length;
             totalDanger += item.todos.filter(todo => todo.danger).length;
@@ -73,16 +85,16 @@ class HomeScreen extends Component {
 
         ];
         const sampleData =[
-            {x:[totalSafe],y:totalSafe/totalQuantity},
-            {x:totalNormal,y:totalNormal/totalQuantity},
-            {x:totalDanger,y:totalDanger/totalQuantity}
+            {x:[totalSafe],y:totalSafe},
+            {x:totalNormal,y:totalNormal},
+            {x:totalDanger,y:totalDanger}
 
         ];
         const dataColor=[
             "#9FD47C","#FFE047","#F16464"
         ];
         
-        
+        const navigation = this.props
         
         return(
             
@@ -94,7 +106,7 @@ class HomeScreen extends Component {
                     visible={this.state.addTodoVisible} 
                     onRequestClose={()=>this.state.toggleAddTodoModal()}
                     >
-                        <AddListModal list={cleanData} closeModal={()=> this.toggleAddTodoModal()} addList={this.addList}/>
+                        <AddListModal list={this.state.lists} closeModal={()=> this.toggleAddTodoModal()} addList={this.addList}/>
                     </Modal>
                     <View style={{height:screenHeight*0.86}}>
                     <FlatList 
@@ -128,6 +140,10 @@ class HomeScreen extends Component {
                                 <Text style={styles.home_text}>安全已佔四成,{"\n"}相信還可以更多! :)</Text>
                                 </View>
                                 <Text>      User:{this.state.user.uid} </Text>
+                                <Text> safe:{totalSafe}  </Text>
+                                <Text> normal:{totalNormal}  </Text>
+                                <Text> danger:{totalDanger}  </Text>
+                                <Text> total:{totalQuantity} </Text>
                             </View>
                             
                             
@@ -139,15 +155,18 @@ class HomeScreen extends Component {
                     horizontal={true} 
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item}) => this.renderList(item) }
+                    
                     />
                     </View>
+                    
                     
                     <View style={styles.tab}>
                         
                         
-                            <FloatingButton/>
-                            {/* <Image source={require('../assets/btn/btn_menu.png')} 
-                            style={[styles.tab_btn,{marginRight:screenWidth*0.7}]}/> */}
+                            <FloatingButton
+                            navigation = {this.props.navigation}
+                            />
+                           
                        <View style={{width:screenWidth*0.7}}></View>
                         <TouchableOpacity onPress={()=> this.toggleAddTodoModal()}>
                             <Image source={require('../assets/btn/btn_add.png')} 

@@ -49,6 +49,7 @@ export default class FlatlistDetail extends Component {
             data = {this.state.todos}
             renderItem ={({item})=> this.renderTodo(item) }
             keyExtractor = {item => item.key}
+            updateList={this.props.updateList}
         />
       </View>
     );

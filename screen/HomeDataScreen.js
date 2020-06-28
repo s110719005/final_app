@@ -35,6 +35,7 @@ export default class HomeDataScreen extends Component {
                         </View>
                         
                     </View>
+                    <Text>hi {safeCount} </Text>
                     <View style={{flex:1}}>
                         <ScrollView style={styles.list_container} 
                         showsVerticalScrollIndicator={false}

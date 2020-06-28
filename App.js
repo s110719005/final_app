@@ -1,11 +1,20 @@
 import React ,{useState,useEffect} from 'react';
 import { StyleSheet, Text, View, TextInput, SafeAreaView ,Dimensions, TouchableOpacity,AsyncStorage} from 'react-native';
+import HomeStackScreen from './screen/Stack/HomeStackScreen'
+import HistoryStackScreen from './screen/Stack/HistoryStackScreen'
+import HistoryScreen from './screen/HistoryScreen'
 import HomeScreen from './screen/HomeScreen'
+import AccountScreen from './screen/AccountScreen'
+
+import {NavigationContainer} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+
+import StackScreen from './screen/StackScreen'
 
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
 
-export default function App() {
+export default function App(navigation) {
   const [username,setUserName] = useState();
   const save = async() => {
     try{
@@ -31,23 +40,47 @@ export default function App() {
     load()
   },[])
 
+  const Stack = createStackNavigator()
+
   return (
-    <View style={styles.container}>
-      <HomeScreen></HomeScreen>
-      {/* <SafeAreaView/> */}
-      {/* <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
-      <TextInput placeholder="請輸入使用者名稱"
-        onChangeText = {text => setUserName(text)}
+    //<HomeScreen></HomeScreen>
+    <StackScreen></StackScreen>
+    // <NavigationContainer>
+    //     <Stack.Navigator
+    //     screenOptions={{
+    //       headerShown: false,
+    //       animationEnabled:true
+
+
+    //     }}
+         
+    //     >
+    //         <Stack.Screen name="Home" component={HomeScreen}
+    //         navigation={navigation}
+    //         />
+    //         <Stack.Screen name="History" component={HistoryStackScreen}/>
+    //         <Stack.Screen name="Account" component={AccountScreen}/>
+    //     </Stack.Navigator>
+    // </NavigationContainer>
+
+
+    // <View style={styles.container}>
+      
+    //   <HomeScreen></HomeScreen>
+    //   {/* <SafeAreaView/> */}
+    //   {/* <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
+    //   <TextInput placeholder="請輸入使用者名稱"
+    //     onChangeText = {text => setUserName(text)}
         
-        style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]} />
-      <TextInput placeholder="請輸入密碼"
+    //     style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]} />
+    //   <TextInput placeholder="請輸入密碼"
         
-        style={[styles.input,{borderTopWidth:1,borderTopRightRadius:0,borderTopStartRadius:0}]} />
-      <TouchableOpacity onPress = {() => save()}
-      style={{justifyContent:"center",alignItems:"center"}}>
-        <Text style={styles.login}>登入</Text>
-      </TouchableOpacity> */}
-    </View>
+    //     style={[styles.input,{borderTopWidth:1,borderTopRightRadius:0,borderTopStartRadius:0}]} />
+    //   <TouchableOpacity onPress = {() => save()}
+    //   style={{justifyContent:"center",alignItems:"center"}}>
+    //     <Text style={styles.login}>登入</Text>
+    //   </TouchableOpacity> */}
+    // </View>
   );
 }
 
