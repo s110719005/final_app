@@ -42,11 +42,11 @@ export default class FlatlistDetail extends Component {
   }
 
   render() {
-      
+    const todo = this.state.todos
     return (
       <View>
         <FlatList
-            data = {this.state.todos}
+            data = {todo}
             renderItem ={({item})=> this.renderTodo(item) }
             keyExtractor = {item => item.key}
             updateList={this.props.updateList}

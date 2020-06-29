@@ -12,7 +12,8 @@ let count = 25;
 
 
 export default class addListModal extends Component {
-  
+    
+   
     
     onIncrement = () => {
         this.setState({
@@ -33,7 +34,7 @@ export default class addListModal extends Component {
         new_note:null,
         note:this.props.list.note,
         day:this.props.list.date,
-        lists:cleanData,
+        //lists:cleanData,
         new_safe:null,
         new_normal:null,
         new_danger:null
@@ -74,6 +75,14 @@ export default class addListModal extends Component {
                 normal:this.state.normal,
                 danger:this.state.danger
             })
+
+            // const key = count
+            // const title = this.state.new_title
+            // const list = {key,title}
+            // const nowtodolist = this.state.nowtodo
+
+            // this.props.addList(list,nowtodolist);
+            this.props.updateList(this.props.list)
             
             count++;
             if(this.state.keepinput===false){
@@ -101,7 +110,8 @@ export default class addListModal extends Component {
             safe:null,
             normal:null,
             danger:null,
-            selectedItem:0
+            selectedItem:0,
+            new_note:null
         });
         
         
@@ -207,7 +217,7 @@ export default class addListModal extends Component {
                     {/* genre */}
                     <View style={styles.genre}>
                     <FlatList
-                        data={lists} 
+                        data={this.props.list} 
                         keyExtractor={item => item.genre} 
                         horizontal={true} 
                         extraData={
@@ -272,6 +282,7 @@ export default class addListModal extends Component {
                         <TextInput style={styles.title_text}
                         placeholder="ex.品牌名稱"
                         onChangeText={note => this.setState({new_note: note})}
+                        value={this.state.new_note}
                         ></TextInput>
                     </View>
                     

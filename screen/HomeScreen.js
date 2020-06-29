@@ -11,6 +11,7 @@ import Fire from '../component/fire'
 
 import Pie from 'react-native-pie'
 import VitoryPie, { VictoryPie } from "victory-native"
+import { ThemeConsumer } from 'react-native-elements';
 
 
 
@@ -47,6 +48,10 @@ class HomeScreen extends Component {
         });
     }
 
+    componentWillUnmount(){
+        firebase.detach();
+    }
+
     toggleAddTodoModal(){
         this.setState({addTodoVisible: !this.state.addTodoVisible });
     }
@@ -56,8 +61,19 @@ class HomeScreen extends Component {
     }
 
     updateList = list =>{
-        firebase.updateList(list);
+        //firebase.updateList(list);
+        this.setState({
+            lists:this.state.lists.map(item =>{
+                return item.id === list.id ? list : item
+            })
+        })
     };
+
+    // addList = (list,nowtodolist) =>{
+    //     this.setState({lists:[...nowtodolist,{...list}});
+    // }
+
+    
 
    
     
@@ -106,7 +122,11 @@ class HomeScreen extends Component {
                     visible={this.state.addTodoVisible} 
                     onRequestClose={()=>this.state.toggleAddTodoModal()}
                     >
-                        <AddListModal list={this.state.lists} closeModal={()=> this.toggleAddTodoModal()} addList={this.addList}/>
+                        <AddListModal list={this.state.lists} 
+                        closeModal={()=> this.toggleAddTodoModal()} 
+                        addList={this.addList}
+                        updateList={this.updateList}
+                        />
                     </Modal>
                     <View style={{height:screenHeight*0.86}}>
                     <FlatList 

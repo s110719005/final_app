@@ -1,6 +1,8 @@
 import firebase from 'firebase'
 import "@firebase/firestore";
 
+import { StoreContext, StoreProvider } from "../src/stores";
+
 const firebaseConfig ={
     apiKey: "AIzaSyDpghpn6rtCHkYXso1iYXlffe7IJAuoFTU",
     authDomain: "appfinal-23a98.firebaseapp.com",
@@ -11,9 +13,16 @@ const firebaseConfig ={
     appId: "1:235000499477:web:6bbe48130682cf4afe6d1c"
 }
 
-
+// const { isLoginState } = useContext(StoreContext);
+//   const [isLogin, setIsLogin] = isLoginState;
+  
+  
 
 class Fire{
+
+    if(isLoginState){
+
+    }
     constructor(callback) {
         this.init(callback);
     }
@@ -52,8 +61,8 @@ class Fire{
         let ref = firebase
         .firestore()
         .collection("users")
-        //.doc(this.userId)
-        .doc("- [ ] mLGPbthTHgUePbjQBv9loFqq5yn2")
+        .doc(this.userId)
+        //.doc("- [ ] mLGPbthTHgUePbjQBv9loFqq5yn2")
         .collection("lists");
 
         this.unsubscribe = ref.onSnapshot(snapshot => {

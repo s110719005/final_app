@@ -79,7 +79,7 @@ export default class floatingButton extends Component {
           </TouchableOpacity>
           
           <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('History')}
+          onPress={() => this.props.navigation.navigate('Account')}
           >
               <Animated.View style={[styles.button,styles.menu,pinStyle2]}>
                 <Image source={require('../assets/btn/btn_user.png')} 
@@ -87,7 +87,9 @@ export default class floatingButton extends Component {
               </Animated.View>
             
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('History')}
+          >
               <Animated.View style={[styles.button,styles.menu,pinStyle]}>
                 <Image source={require('../assets/btn/btn_history.png')} 
                 style={[styles.tab_btn]}/>

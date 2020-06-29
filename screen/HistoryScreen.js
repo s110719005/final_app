@@ -13,29 +13,29 @@ class HistoryScreen extends Component {
     
     state = {
         addTodoVisible : false,
-        lists: cleanData,
-        //lists: [],
+        //lists: cleanData,
+        lists: [],
         user: {},
         loading:true,
         
         
     };
 
-    // componentDidMount(){
-    //     firebase = new Fire((error,user) => {
-    //         if(error){
-    //             return alert("哇 好像哪裡出錯了...");
-    //         }
+    componentDidMount(){
+        firebase = new Fire((error,user) => {
+            if(error){
+                return alert("哇 好像哪裡出錯了...");
+            }
 
-    //         firebase.getLists(lists => {
-    //             this.setState({ lists, user }, () => {
-    //                 this.setState({ loading: false });
-    //             });
-    //         });
+            firebase.getLists(lists => {
+                this.setState({ lists, user }, () => {
+                    this.setState({ loading: false });
+                });
+            });
             
-    //         this.setState({user});
-    //     });
-    // }
+            this.setState({user});
+        });
+    }
 
     toggleAddTodoModal(){
         this.setState({addTodoVisible: !this.state.addTodoVisible });

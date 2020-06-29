@@ -1,4 +1,4 @@
-import React ,{useState,useEffect} from 'react';
+import React ,{useState,useEffect,useContext,createContext} from 'react';
 import { StyleSheet, Text, View, TextInput, SafeAreaView ,Dimensions, TouchableOpacity,AsyncStorage} from 'react-native';
 import HomeStackScreen from './screen/Stack/HomeStackScreen'
 import HistoryStackScreen from './screen/Stack/HistoryStackScreen'
@@ -16,6 +16,7 @@ let screenHeight = Dimensions.get('window').height;
 
 export default function App(navigation) {
   const [username,setUserName] = useState();
+  
   const save = async() => {
     try{
       await AsyncStorage.setItem("MyName",username)

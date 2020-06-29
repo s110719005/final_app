@@ -37,68 +37,10 @@ if (!firebase.apps.length) {
 const AccountScreen = ({navigation}) => {
     const { isLoginState } = useContext(StoreContext);
   const [isLogin, setIsLogin] = isLoginState;
-    const [username,setUserName] = useState();
-    const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-
-  let db = firebase.firestore();
-
-  const onSignIn = async () => {
-    setError(" ");
-    setLoading(true);
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      setEmail("");
-      setPassword("");
-      setError("");
-      setIsLogin(true);   
-    } catch (err) {
-      setShowModal(true);
-      setLoading(false);
-    }
-  };
-
-  const onCreateUser = async () => {
-    try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      setShowModal(false);
-      setError("");
-      setEmail("");
-      setPassword("");
-      setLoading(false);
-      setIsLogin(true);
-      
-    } catch (err) {
-      setShowModal(false);
-      setError(err.message);
-      setEmail("");
-      setPassword("");
-      setLoading(false);
-    }
-  };
-
-  const onCLoseModal = () => {
-    setShowModal(false);
-    setError("");
-    setEmail("");
-    setPassword("");
-    setLoading(false);
-  };
-
-  const renderButton = () => {
-    return loading ? (
-      <ActivityIndicator size="large" style={{ marginTop: 30 }} />
-    ) : (
-      <Button
-        title="/2"
-        buttonStyle={{ backgroundColor: "#4AAF4C" }}
-        containerStyle={{ padding: 5 }}
-        onPress={onSignIn}
-      />
-    );
+  
+  const onSignOut = () => {
+    firebase.auth().signOut();
+    setIsLogin(false);
   };
 
     return(
@@ -110,46 +52,18 @@ const AccountScreen = ({navigation}) => {
                             <View style={styles.container}>
                                 <SafeAreaView style={{ backgroundColor: '#FFCB77' }}/>
                                 
-                                <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
-                                <Input placeholder="請輸入使用者名稱"
-                                    labelStyle={{ marginTop: 20 }}
-                                    label="Email"
-                                    placeholder="ntue@dtd.com"
-                                    autoCorrect={false}
-                                    autoCapitalize="none"
-                                    keyboardType="email-address"
-                                    value={email}
-                                    onChangeText={(email) => setEmail(email)}
-                                    
-                                    style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]} />
-                                <Input placeholder="請輸入密碼"
-                                    labelStyle={{ marginTop: 20 }}
-                                    label="Password"
-                                    placeholder="Must have at least 7 characters"
-                                    secureTextEntry
-                                    autoCorrect={false}
-                                    autoCapitalize="none"
-                                    value={password}
-                                    onChangeText={(password) => setPassword(password)}
-                                    style={[styles.input,{borderTopWidth:1,borderTopRightRadius:0,borderTopStartRadius:0}]} />
                                 
-                                <TouchableOpacity onPress={onSignIn}
-                                style={{justifyContent:"center",alignItems:"center"}}>
-                                    <Text style={styles.login}>登入</Text>
-                                </TouchableOpacity> 
-                            </View>
-                            <Confirm
-                                title="Are you sure to create a new user?"
-                                visible={showModal}
-                                onAccept={onCreateUser}
-                                onDecline={onCLoseModal}
-                            />
                                 
                         </View>
                             
-                            
+                        <Button
+                            title="Sign out"
+                            buttonStyle={{ backgroundColor: "#F8671D" }}
+                            containerStyle={{ padding: 5 }}
+                            onPress={onSignOut}
+                        />
                         
-                    
+                    </View>
                     </View>
                     
                     
