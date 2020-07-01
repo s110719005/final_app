@@ -5,7 +5,7 @@ import { Input } from 'react-native-elements';
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
 
-const NewInput = (props) => {
+const NewInput2 = (props) => {
 
    // if (Platform.OS === 'ios') {
    //    return (
@@ -22,7 +22,7 @@ const NewInput = (props) => {
        <TextInput
          {...props}
          autoCorrect={false}
-         style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]}
+         style={[styles.input,{borderTopWidth:1,borderTopRightRadius:0,borderTopStartRadius:0}]}
          autoCorrect={false}
        />
      </View>
@@ -31,7 +31,7 @@ const NewInput = (props) => {
 
 const styles = {
    containerStyle: {
-      borderBottomWidth: 0,
+      borderBottomWidth: 1,
       padding: 0,
       justifyContent: 'flex-start',
       flexDirection: 'row',
@@ -49,4 +49,4 @@ const styles = {
     },
 };
 
-export default NewInput;
+export default NewInput2;

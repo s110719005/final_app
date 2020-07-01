@@ -111,12 +111,14 @@ export default class floatingButton extends Component {
 
 const styles = StyleSheet.create({
     tab_con:{
-        alignItems:"center"
+        alignItems:"center",
+        
     },
     tab_menu:{
         width:40,
         height:40,
-        backgroundColor:"#227C9D"
+        backgroundColor:"#227C9D",
+        paddingTop:10
     },
     tab_btn:{
         position:"absolute",

@@ -1,4 +1,4 @@
-import React, { Component, Fragment,useContext } from "react";
+import React, { Component, Fragment,useContext,useEffect,useState } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,19 @@ import {
   TouchableOpacity,
   ScrollView
 } from "react-native";
-
+import { AsyncStorage } from 'react-native';
 
 
 import HistoryScreen from './HistoryScreen'
 import HomeScreen from './HomeScreen'
+import HomeScreenDefault from './HomeScreenDefault'
 import AccountScreen from './AccountScreen'
 import AccountScreen2 from './AccountScreen2'
-import AccountStackScreen from './Stack/AccountStackScreen'
-import UserScreen from '../src/screens/UserScreen'
+import ChangeDataScreen from './ChangeDataScreen'
+import ConnectScreen from './ConnectScreen'
+import CreateConnectScreen from './CreateConnectScreen'
+import ManageConnectScreen from './ManageConnectScreen'
+import SettingScreen from './SettingScreen'
 
 import { StoreContext, StoreProvider } from "../src/stores";
 import {NavigationContainer} from '@react-navigation/native'
@@ -27,12 +31,41 @@ import {createStackNavigator} from '@react-navigation/stack'
 //import { Icon, Button, Container, Header, Content, Left } from 'native-base'
 
 //custom components imports 
+function Account() {
+  const Stack = createStackNavigator()
+  return (
+    <Stack.Navigator
+    independent ={true}
+    screenOptions={{
+      headerShown: false,
+      //animationEnabled:false
+      
+
+    }}
+    >
+      <Stack.Screen name="User" component={AccountScreen2}/>
+      <Stack.Screen name="Setting" component={SettingScreen}/>
+      <Stack.Screen name="Modify" component={ChangeDataScreen}/>
+      <Stack.Screen name="Connect" component={ConnectScreen}/>
+      <Stack.Screen name="CreateConnect" component={CreateConnectScreen}/>
+      <Stack.Screen name="ManageConnect" component={ManageConnectScreen}/>
+      
+    </Stack.Navigator>
+  );
+}
+
 
 
 const StackScreen = ({navigation}) => {
+    
+    
+
     const { isLoginState } = useContext(StoreContext);
     const [ isLogin, setIsLogin] = isLoginState;
+
+    
     const Stack = createStackNavigator()
+    
 
   
     return isLogin ? (
@@ -40,6 +73,7 @@ const StackScreen = ({navigation}) => {
         independent ={true}
         >
         <Stack.Navigator
+        independent ={true}
         screenOptions={{
           headerShown: false,
           animationEnabled:false
@@ -51,8 +85,9 @@ const StackScreen = ({navigation}) => {
             <Stack.Screen name="Home" component={HomeScreen}/>
             <Stack.Screen name="History" component={HistoryScreen}/>
             <Stack.Screen
+            independent ={true}
           name="Account"
-          component={AccountScreen2}
+          component={Account}
           options={{
             headerTitleStyle: {
               fontWeight: "400",
@@ -74,7 +109,7 @@ const StackScreen = ({navigation}) => {
   
           }}
           >
-            <Stack.Screen name="Home" component={HomeScreen}/>
+            <Stack.Screen name="Home" component={HomeScreenDefault}/>
             <Stack.Screen name="History" component={HistoryScreen}/>
             <Stack.Screen
               name="Account"
@@ -86,6 +121,7 @@ const StackScreen = ({navigation}) => {
                 },
               }}
             />
+            
           </Stack.Navigator>
         </NavigationContainer>
       );

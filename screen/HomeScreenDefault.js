@@ -20,7 +20,7 @@ let screenHeight = Dimensions.get('window').height;
 let count = 25;
 
 
-class HomeScreen extends Component {
+class HomeScreenDefault extends Component {
     
     state={
         isLogin:this.props.isLogin
@@ -28,8 +28,8 @@ class HomeScreen extends Component {
    
     state = {
         addTodoVisible : false,
-        //lists: cleanData,
-        lists: [],
+        lists: cleanData,
+        //lists: [],
         user: {},
         loading:true,
         
@@ -44,7 +44,7 @@ class HomeScreen extends Component {
             }
 
             firebase.getLists(lists => {
-                this.setState({ lists, user }, () => {
+                this.setState({  user }, () => {
                     this.setState({ loading: false });
                 });
             });
@@ -66,16 +66,16 @@ class HomeScreen extends Component {
     }
 
     updateList = list =>{
-        firebase.updateList(list);
-        // this.setState({
-        //     lists:this.state.lists.map(item =>{
-        //         return item.id === list.id ? list : item
-        //     })
-        // })
+        //firebase.updateList(list);
+        this.setState({
+            lists:this.state.lists.map(item =>{
+                return item.id === list.id ? list : item
+            })
+        })
     };
 
     addList(list,nowid) {
-        firebase.addList(list,nowid)
+        //firebase.addList(list,nowid)
     }
     // addDoc = db.collection('cities').add({
     //     name: 'Tokyo',
@@ -144,7 +144,7 @@ class HomeScreen extends Component {
                         <AddListModal list={this.state.lists} 
                         closeModal={()=> this.toggleAddTodoModal()} 
                         addList={this.addList}
-                        //updateList={this.updateList}
+                        updateList={this.updateList}
                         />
                     </Modal>
                     <View style={{height:screenHeight*0.86}}>
@@ -179,6 +179,7 @@ class HomeScreen extends Component {
                                       }}
                                 />
                             </View>
+                            
                                 <View style={styles.home_text_bar}>
                                     <ImageBackground
                                     source={require('../assets/img/img_chatbar.png')} 
@@ -187,6 +188,8 @@ class HomeScreen extends Component {
                                         {/* <Text style={styles.home_text}>{"\n"}安全已佔四成,{"\n"}相信還可以更多! :)</Text> */}
                                         <Text style={styles.home_text}>{chattext}</Text>
                                     </ImageBackground>
+                                
+                                
                                 </View>
                                 <View style={styles.dirty_con}>
                                       <Text style={styles.dirty_text}>髒鬼警報</Text>
@@ -209,8 +212,6 @@ class HomeScreen extends Component {
                                 </View>
                                 
                             </View>
-
-                            
                             
                             
                         </>
@@ -250,7 +251,7 @@ class HomeScreen extends Component {
 }
 
 
-export default HomeScreen;
+export default HomeScreenDefault;
 
 const styles = StyleSheet.create({
     home_container: {
@@ -278,8 +279,7 @@ const styles = StyleSheet.create({
         width:screenWidth*0.7,
         height:screenHeight*0.15,
         alignSelf:"center",
-        justifyContent:"center",
-        marginTop:-20
+        justifyContent:"center"
     },
     chatbar:{
         width:screenWidth*0.7,

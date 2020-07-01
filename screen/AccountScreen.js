@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useContext,createContext} from "react";
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity,SafeAreaView,Modal,Image,AsyncStorage,Button} from "react-native";
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity,SafeAreaView,Modal,Image,AsyncStorage,Button,Alert} from "react-native";
 
 import FloatingButton from '../component/floatingButton'
 import AddListModal from '../component/addListModal'
@@ -8,6 +8,7 @@ import cleanData from '../component/cleanData'
 
 
 import Input from "../src/components/Input";
+import Input2 from "../src/components/Input2";
 import Confirm from "../src/components/Confirm";
 import { StoreContext } from "../src/stores";
 import * as firebase from "firebase";
@@ -35,41 +36,189 @@ if (!firebase.apps.length) {
 }
 
 const AccountScreen = ({navigation}) => {
+    
+
     const { isLoginState } = useContext(StoreContext);
-  const [isLogin, setIsLogin] = isLoginState;
+    const [isLogin, setIsLogin] = isLoginState;
+    
     const [username,setUserName] = useState();
     const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+    const [password, setPassword] = useState(null);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-  let db = firebase.firestore();
+    
+
+  
+
+
+  const componentDidMount = () =>{
+    firebase = new Fire((error,user) => {
+        if(error){
+            return alert("哇 好像哪裡出錯了...");
+        }
+
+        firebase.getLists(lists => {
+            this.setState({ lists, user }, () => {
+                this.setState({ loading: false });
+            });
+        });
+        
+        this.setState({user});
+    });
+};
+
+
+
+const componentWillUnmount = () =>{
+    firebase.detach();
+};
+
+let db = firebase.firestore();
+// var ref = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("1");
+// var ref2 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("2");
+// var ref3 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("3");
+// var ref4 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("4");
 
   const onSignIn = async () => {
     setError(" ");
     setLoading(true);
     try {
+      
       await firebase.auth().signInWithEmailAndPassword(email, password);
       setEmail("");
       setPassword("");
       setError("");
-      setIsLogin(true);   
+      setIsLogin(true); 
+      
+      
+      
+
     } catch (err) {
-      setShowModal(true);
+      //setShowModal(true);
+      Alert.alert(
+        '無此帳號或密碼錯誤',
+        '是否直接建立帳號？',
+        [
+          {
+            text: '好',
+            onPress:onCreateUser
+          },
+          {
+            text: '下次再說',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          }
+        ],
+        { cancelable: false }
+      );
       setLoading(false);
     }
   };
+  
+  
 
-  const onCreateUser = async () => {
+  const onCreateUser = async (user) => {
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
+        
+      await firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then (userCredential => {
+        var ref = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("1");
+        var ref2 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("2");
+        var ref3 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("3");
+        var ref4 = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc("4");
+        var ref5 = db.collection("users").doc(firebase.auth().currentUser.uid);
+        //set data into User database
+        ref5.set({
+          username:"使用者",
+          pic:"https://i.ibb.co/CKctjN7/img-logo.png"
+        })
+        ref.set({
+            no:"1",
+            id:1,
+            genre:"衛浴",
+            pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_bathroom2.png?raw=true",
+            todos:[
+                {
+                key:"1",
+                title:"預設",
+                note:"備註",
+                day:0,
+                limit:30,
+                safe:true,
+                normal:false,
+                danger:false
+                }
+            ]
+                
+        })
+
+        ref2.set({
+          no:"2",
+            id:2,
+            genre:"廚房",
+            pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_kitchen.png?raw=true",
+            todos:[
+                {
+                key:"2",
+                title:"預設",
+                note:"備註",
+                day:0,
+                limit:30,
+                safe:true,
+                normal:false,
+                danger:false
+                }
+            ]
+          
+        })
+        ref3.set({
+          no:"3",
+            id:3,
+            genre:"起居",
+            pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_bedroom.png?raw=true",
+            todos:[
+                {
+                key:"3",
+                title:"預設",
+                note:"備註",
+                day:0,
+                limit:30,
+                safe:false,
+                normal:true,
+                danger:false
+                }
+            ]
+          
+        })
+        ref4.set({
+          no:"4",
+            id:4,
+            genre:"其他",
+            pic:"https://github.com/s110719005/app_final_pic/blob/master/pic_household.png?raw=true",
+            todos:[
+                {
+                key:"4",
+                title:"預設",
+                note:"備註",
+                day:0,
+                limit:30,
+                safe:false,
+                normal:false,
+                danger:true
+                }
+            ]
+          
+        })
+      });
       setShowModal(false);
       setError("");
       setEmail("");
       setPassword("");
       setLoading(false);
       setIsLogin(true);
+      
       
     } catch (err) {
       setShowModal(false);
@@ -110,11 +259,11 @@ const AccountScreen = ({navigation}) => {
                             <View style={styles.container}>
                                 <SafeAreaView style={{ backgroundColor: '#FFCB77' }}/>
                                 
-                                <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text>
+                                {/* <Text style={{fontSize:20,marginBottom:10}}>Hello {username} </Text> */}
                                 <Input placeholder="請輸入使用者名稱"
                                     labelStyle={{ marginTop: 20 }}
                                     label="Email"
-                                    placeholder="ntue@dtd.com"
+                                    placeholder="電子信箱"
                                     autoCorrect={false}
                                     autoCapitalize="none"
                                     keyboardType="email-address"
@@ -122,10 +271,10 @@ const AccountScreen = ({navigation}) => {
                                     onChangeText={(email) => setEmail(email)}
                                     
                                     style={[styles.input,{borderBottomWidth:1,borderBottomEndRadius:0,borderBottomLeftRadius:0}]} />
-                                <Input placeholder="請輸入密碼"
+                                <Input2 placeholder="請輸入密碼"
                                     labelStyle={{ marginTop: 20 }}
                                     label="Password"
-                                    placeholder="Must have at least 7 characters"
+                                    placeholder="密碼"
                                     secureTextEntry
                                     autoCorrect={false}
                                     autoCapitalize="none"
@@ -144,8 +293,9 @@ const AccountScreen = ({navigation}) => {
                                 onAccept={onCreateUser}
                                 onDecline={onCLoseModal}
                             />
-                                
+                             {/* <Text>還不是會員？<Text>註冊一下</Text></Text>  */}
                         </View>
+                       
                             
                             
                         
@@ -161,7 +311,7 @@ const AccountScreen = ({navigation}) => {
                             />
                            
                        <View style={[{width:screenWidth*0.7},styles.page_name]}>
-                           <Text>會員</Text>
+                           <Text style={styles.page_name_text}>會員</Text>
                        </View>
                        <TouchableOpacity 
                         >
@@ -192,11 +342,20 @@ const styles = StyleSheet.create({
         
         alignItems:"center"
     },
+    page_name_text:{
+        color:"white",
+        fontSize:23,
+        fontWeight:"500",
+        textAlign:"center",
+        lineHeight:40,
+        letterSpacing:5
+      },
     container: {
         flex: 1,
         backgroundColor: '#FFCB77',
         alignItems: 'center',
-        //paddingTop:screenHeight*0.2
+        
+        paddingTop:screenHeight*0.25
       },
     input:{
         borderWidth:2,
@@ -209,8 +368,9 @@ const styles = StyleSheet.create({
         paddingLeft:5
       },
       login:{
+        color:"#5F5F5F",
         backgroundColor:"#9FD47C",
-        width:screenWidth*0.3,
+        width:screenWidth*0.38 ,
         height:screenHeight*0.05,
         textAlign:"center",
         fontSize:23,

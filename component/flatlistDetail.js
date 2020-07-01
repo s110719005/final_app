@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet, FlatList,Dimensions } from 'react-native';
+import { View, Text,StyleSheet, FlatList,Dimensions,Animated, KeyboardAvoidingView } from 'react-native';
+import {swipeable, TouchableOpacity} from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
@@ -10,7 +12,7 @@ export default class FlatlistDetail extends Component {
       todos: this.props.list.todos
   }
 
-  renderTodo = todo => {
+  renderTodo = (todo,index) => {
     let buttonBg ;
     if(todo.safe===true) {
         buttonBg = "#9FD47C"
@@ -22,36 +24,72 @@ export default class FlatlistDetail extends Component {
         buttonBg = "#F16464"
     }
         return (
+            <Swipeable
+             renderLeftActions ={(_, dragX)=> this.leftActions(dragX, index)}
+            >
             <View style={styles.todolist_container}>
                 <View style={[styles.circle,{backgroundColor:buttonBg}]}></View>
                 <View style={styles.todolist_text_container}>
                     <Text style={styles.todolist_text}>{todo.title}
                         <Text style={styles.todolist_text2}>({todo.note})</Text>
                     </Text>
+                    
                     <View style={styles.todolist_text3_con}>
                         <Text style={styles.todolist_text3}>使用  </Text>
                             <Text style={styles.todolist_text4}>{todo.day}</Text>
                         <Text style={styles.todolist_text3}>天 </Text>
                     </View>
-                    
-                    
+
+
                 </View>
-                
+
             </View>
+            </Swipeable>
         )
+  }
+
+  deleteTodo = (index)=>{
+    let list = this.props.list
+    list.todos.splice(index,1)
+
+    this.props.updateList(list)
+  }
+
+  leftActions = (dragX,index) =>{
+      
+    return (
+        <TouchableOpacity
+        onPress={() => this.deleteTodo(index)}
+        >
+            <Animated.View style = {styles.delete_btn}>
+                
+                <Animated.Image
+                style = {styles.delete_img}
+                source={require('../assets/btn/btn_delete.png')}
+                ></Animated.Image>
+                <Animated.Text style = {styles.delete_text}>刪除</Animated.Text>
+            </Animated.View>
+        </TouchableOpacity>
+    )
   }
 
   render() {
     const todo = this.state.todos
+    const list = this.props.list
     return (
+        
+
+        
       <View>
         <FlatList
-            data = {todo}
-            renderItem ={({item})=> this.renderTodo(item) }
-            keyExtractor = {item => item.key}
-            updateList={this.props.updateList}
+            data = {this.props.list.todos}
+            renderItem ={({item,index})=> this.renderTodo(item,index) }
+            //keyExtractor = {item => item.key}
+            keyExtractor = {(_, index) => index.toString}
+            updateList={list}
         />
       </View>
+      
     );
   }
 }
@@ -70,7 +108,7 @@ const styles = StyleSheet.create({
         shadowOffset: {
         height: 3,
         width: 2,}
-        
+
     },
     todolist_text_container:{
         display:"flex",
@@ -78,20 +116,20 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"space-around",
         height:screenHeight*0.13,
-        
+
     },
     todolist_text:{
         fontSize:23,
         fontWeight:"800",
         width:"50%",
         marginLeft:"10%"
-        
+
     },
     todolist_text2:{
         fontSize:15,
         fontWeight:"600",
         color:"#565656"
-        
+
     },
     todolist_text3:{
         fontSize:15,
@@ -123,6 +161,25 @@ const styles = StyleSheet.create({
         borderRadius:20/2,
         borderWidth:2,
         borderColor:"#A6A6A6"
-    }
+    },
+    delete_btn:{
+        backgroundColor:"#FE6D73",
+        //flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+        width:60,
+        height:screenHeight*0.13,
+        marginRight:10,
+        borderRadius:10
+    },
+    delete_img:{
+        height:30,
+        width:27
+    },
+    delete_text:{
+        color:"white",
+        marginTop:10,
+        fontWeight:"500"
+    },
 
 });

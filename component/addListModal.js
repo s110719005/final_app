@@ -2,18 +2,46 @@ import React, { Component } from 'react';
 import { View, Text, KeyboardAvoidingView ,StyleSheet, SafeAreaView,Dimensions, TouchableOpacity,TextInput,Image,TouchableWithoutFeedback, FlatList,Alert} from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import cleanData from '../component/cleanData'
-
+import * as firebase from "firebase";
+import Fire from '../component/fire'
 
 let screenWidth = Dimensions.get('window').width;
 let screenHeight = Dimensions.get('window').height;
 
 let count = 25;
 
+const firebaseConfig = {
+    apiKey: "AIzaSyDpghpn6rtCHkYXso1iYXlffe7IJAuoFTU",
+      authDomain: "appfinal-23a98.firebaseapp.com",
+      databaseURL: "https://appfinal-23a98.firebaseio.com",
+      projectId: "appfinal-23a98",
+      storageBucket: "appfinal-23a98.appspot.com",
+      messagingSenderId: "235000499477",
+      appId: "1:235000499477:web:6bbe48130682cf4afe6d1c"
+  };
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 
+  const componentDidMount = () =>{
+    firebase = new Fire((error,user) => {
+        if(error){
+            return alert("哇 好像哪裡出錯了...");
+        }
+
+        firebase.getLists(lists => {
+            this.setState({ lists, user }, () => {
+                this.setState({ loading: false });
+            });
+        });
+        
+        this.setState({user});
+    });
+};
 
 export default class addListModal extends Component {
     
-   
+    
     
     onIncrement = () => {
         this.setState({
@@ -65,24 +93,48 @@ export default class addListModal extends Component {
                     this.state.danger=true
             }
             
-            this.state.nowtodo.push({
-                key:count,
-                title: this.state.new_title,
-                day:dleft,
-                note:this.state.new_note,
-                due:this.state.due_date_count,
-                safe:this.state.safe,
-                normal:this.state.normal,
-                danger:this.state.danger
-            })
+            // this.state.nowtodo.push({
+            //     key:count,
+            //     title: this.state.new_title,
+            //     day:dleft,
+            //     note:this.state.new_note,
+            //     due:this.state.due_date_count,
+            //     safe:this.state.safe,
+            //     normal:this.state.normal,
+            //     danger:this.state.danger
+            // })
 
-            // const key = count
-            // const title = this.state.new_title
-            // const list = {key,title}
-            // const nowtodolist = this.state.nowtodo
+            const key = count
+            const title = this.state.new_title
+            const day=dleft
+            const note=this.state.new_note
+            const due=this.state.due_date_count
+            const safe=this.state.safe
+            const normal=this.state.normal
+            const danger=this.state.danger
+            const list = {key,title,day,note,due,safe,normal,danger}
+            const nowid = this.state.nowid
 
-            // this.props.addList(list,nowtodolist);
-            this.props.updateList(this.props.list)
+            this.props.addList(nowid,list);
+
+            // let db = firebase.firestore();
+            // var ref = db.collection("users").doc(firebase.auth().currentUser.uid).collection("lists").doc(this.state.nowid).collection("todos");
+            // ref.set({
+                
+            //         key:count,
+            //         title: this.state.new_title,
+            //         day:dleft,
+            //         note:this.state.new_note,
+            //         due:this.state.due_date_count,
+            //         safe:this.state.safe,
+            //         normal:this.state.normal,
+            //         danger:this.state.danger
+                
+                
+            // })
+            
+
+            //this.props.updateList(this.props.list)
             
             count++;
             if(this.state.keepinput===false){
@@ -107,6 +159,7 @@ export default class addListModal extends Component {
             new_title:null,
             //count:"ya" ,
             nowtodo:null,
+            nowid:null,
             safe:null,
             normal:null,
             danger:null,
@@ -130,6 +183,7 @@ export default class addListModal extends Component {
             
             nowgenre:this.props.list.genre,
             nowtodo:null,
+            nowid:null,
             selectedItem:0,
             keepinput:false
             
@@ -163,7 +217,6 @@ export default class addListModal extends Component {
     var day_left = Math.abs(d1-d2)/86400000; //in milliseconds
     
     
-
     return (
        
         <KeyboardAvoidingView style={styles.modal_add}>
@@ -228,7 +281,7 @@ export default class addListModal extends Component {
                         <TouchableOpacity 
                         //style={styles.genre_text_con}
                         style={selectedItem === item.id ? styles.genre_text_con2 : styles.genre_text_con} 
-                        onPress={()=>{this.setState({nowgenre:item.genre,nowtodo:item.todos})}}
+                        onPress={()=>{this.setState({nowgenre:item.genre,nowtodo:item.todos,nowid:item.no})}}
                         onPressIn={() => this.handleSelection(item.id)}
                         >
                             <View ><Text style={styles.genre_text}>{item.genre}</Text></View>
@@ -303,7 +356,7 @@ export default class addListModal extends Component {
                             <Text style={styles.save_btn_text}>儲存&繼續</Text>
                         </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.addTodo(day_left)}
+                        <TouchableOpacity onPress={() => this.addTodo(day_left,this.state.item)}
                         onPressIn={() => this.setState({keepinput:false})}
                         >
                         <View style={styles.save_btn}>

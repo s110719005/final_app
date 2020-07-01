@@ -9,7 +9,9 @@ let screenHeight = Dimensions.get('window').height;
 
 
 export default class HomeDataScreen extends Component {
-    
+    state={
+        nowlist : this.props.list
+    }
     
     render(){
         const list = this.props.list
@@ -17,7 +19,7 @@ export default class HomeDataScreen extends Component {
         return(
             <View style={styles.home_container}>
                     
-                    <SafeAreaView style={{ backgroundColor: '#7FB134' }}/>
+                    <SafeAreaView style={{ backgroundColor: '#FFCB77' }}/>
                     <View style={styles.header}>
                         <View>
                         <Image
@@ -35,12 +37,14 @@ export default class HomeDataScreen extends Component {
                         </View>
                         
                     </View>
-                    <Text>hi {safeCount} </Text>
+                    
                     <View style={{flex:1}}>
                         <ScrollView style={styles.list_container} 
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{flex:1}}>
-                            <FlatlistDetail list={list} />
+                            <FlatlistDetail list={list} 
+                            updateList={this.props.updateList}
+                            />
                         </ScrollView>
                     </View>
                     

@@ -20,11 +20,13 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^2.0.3",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-picker-select": "^7.0.0",
     "react-native-pie": "^1.1.2",
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.2.0",
     "react-native-svg": "^12.1.0",
+    "react-native-switch": "^2.0.0",
     "react-native-web": "~0.11.7",
     "react-navigation-transitions": "^1.0.12",
     "victory-native": "^34.3.0"

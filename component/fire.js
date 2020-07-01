@@ -20,9 +20,7 @@ const firebaseConfig ={
 
 class Fire{
 
-    if(isLoginState){
-
-    }
+    
     constructor(callback) {
         this.init(callback);
     }
@@ -58,13 +56,8 @@ class Fire{
     // }
 
     getLists(callback){
-        let ref = firebase
-        .firestore()
-        .collection("users")
-        .doc(this.userId)
-        //.doc("- [ ] mLGPbthTHgUePbjQBv9loFqq5yn2")
-        .collection("lists");
-
+        let ref = this.ref.orderBy("id")
+//.doc("- [ ] mLGPbthTHgUePbjQBv9loFqq5yn2")
         this.unsubscribe = ref.onSnapshot(snapshot => {
             lists = [];
 
@@ -76,12 +69,68 @@ class Fire{
         });
     }
     
-    
+    addList(nowid,list){
+        let ref = firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .collection("lists")
+        .doc(nowid)
+        ;
+        //let admin = require(this.userId);
+        ref.update({
+            todos: firebase.firestore.FieldValue.arrayUnion({
+                key:list.key,
+                title: list.title,
+                day:list.day,
+                note:list.note,
+                due:list.due,
+                safe:list.safe,
+                normal:list.normal,
+                danger:list.danger
+            })
+          });
+
+        // ref.update({
+        //     todos:[{key:4,
+        //     title: list.title,
+        //     day:"",
+        //     note:"",
+        //     due:"",
+        //     safe:true,
+        //     normal:true,
+        //     danger:true}]
+        // });
+    }
+
+    updateList(list,callback) {
+        let ref = firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .collection("lists");
+
+
+       
+        ref.doc("1").update(lists[0])
+        ref.doc("2").update(lists[1])
+        ref.doc("3").update(lists[2])
+        ref.doc("4").update(lists[3])
+    }
 
     get userId(){
         return firebase.auth().currentUser.uid;
     }
     
+    get ref(){
+        return firebase
+        .firestore()
+        .collection("users")
+        .doc(this.userId)
+        .collection("lists");
+    }
+    
+   
 
     detach(){
         this.unsubscribe();
